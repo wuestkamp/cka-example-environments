@@ -1,0 +1,255 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: management
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    id: m-2x3-api-svc
+  name: m-2x3-api-svc
+  namespace: management
+spec:
+  ports:
+  - name: 4546-80
+    port: 4546
+    protocol: TCP
+    targetPort: 80
+  selector:
+    id: m-2x3-api
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    id: m-2x3-web-svc
+  name: m-2x3-web-svc
+  namespace: management
+spec:
+  ports:
+  - name: 4545-80
+    port: 4545
+    protocol: TCP
+    targetPort: 80
+  selector:
+    id: m-2x3-web
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    id: m-3cc-web
+  name: m-3cc-web
+  namespace: management
+spec:
+  ports:
+  - name: 6363-80
+    port: 6363
+    protocol: TCP
+    targetPort: 80
+  selector:
+    id: m-3cc-web
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-test
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      id: web-test
+  template:
+    metadata:
+      labels:
+        id: web-test
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-test-2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: web-test-2
+  template:
+    metadata:
+      labels:
+        id: web-test-2
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-dev-shop
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: web-dev-shop
+  template:
+    metadata:
+      labels:
+        id: web-dev-shop
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-dev-shop-dev2
+  namespace: development
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: web-dev-shop-dev2
+  template:
+    metadata:
+      labels:
+        id: web-dev-shop-dev2
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    id: m-2x3-api
+  name: m-2x3-api
+  namespace: management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: m-2x3-api
+  template:
+    metadata:
+      labels:
+        id: m-2x3-api
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: m-2x3-web
+  namespace: management
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      id: m-2x3-web
+  template:
+    metadata:
+      labels:
+        id: m-2x3-web
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tag: light
+    type: runner
+  name: m-3cc-runner
+  namespace: management
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      id: m-3cc-runner
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        id: m-3cc-runner
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - sleep 2d
+        image: python:3.7.4-alpine3.9
+        name: python
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tag: heavy
+    type: runner
+  name: m-3cc-runner-heavy
+  namespace: management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: m-3cc-runner-heavy
+  template:
+    metadata:
+      labels:
+        id: m-3cc-runner-heavy
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - sleep 2d
+        image: python:3.7.4-alpine3.9
+        name: python
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: m-3cc-web
+  namespace: management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: m-3cc-web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        id: m-3cc-web
+    spec:
+      containers:
+      - image: nginx:1.16-alpine
+        name: nginx
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          tcpSocket:
+            port: 80

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: web-server
+  name: web-server
+  namespace: management
+spec:
+  containers:
+  - image: nginx:1.16.1-alpine
+    name: nginx
+  - image: httpd:2.4.41-alpine
+    name: httpd
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}

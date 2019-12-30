@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-test
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      id: web-test
+  template:
+    metadata:
+      labels:
+        id: web-test
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-test-2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: web-test-2
+  template:
+    metadata:
+      labels:
+        id: web-test-2
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd

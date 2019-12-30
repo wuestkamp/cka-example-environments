@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-dev-shop
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      id: web-dev-shop
+  template:
+    metadata:
+      labels:
+        id: web-dev-shop
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-dev-shop-dev2
+  namespace: development
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: web-dev-shop-dev2
+  template:
+    metadata:
+      labels:
+        id: web-dev-shop-dev2
+    spec:
+      containers:
+      - image: httpd:2.4-alpine
+        name: httpd
