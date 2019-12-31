@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: what-a-deployment
+  name: what-a-deployment
+  namespace: development
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: what-a-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: what-a-deployment
+    spec:
+      containers:
+      - image: nginx:1.17.6-alpine
+        name: what-a-deployment
+        resources: {}

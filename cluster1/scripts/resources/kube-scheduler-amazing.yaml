@@ -18,7 +18,7 @@ spec:
     - --secure-port=7777
     - --kubeconfig=/etc/kubernetes/scheduler.conf
     - --leader-elect=false
-    - --scheduler-name=kube-scheduler-special
+    - --scheduler-name=kube-scheduler-amazing
     image: k8s.gcr.io/kube-scheduler:v1.16.3
     imagePullPolicy: IfNotPresent
     name: kube-scheduler-special

@@ -42,22 +42,14 @@ spec:
     id: m-2x3-web
   type: ClusterIP
 ---
-apiVersion: v1
-kind: Service
+apiVersion: scheduling.k8s.io/v1
+description: I am so important
+globalDefault: false
+kind: PriorityClass
 metadata:
-  labels:
-    id: m-3cc-web
-  name: m-3cc-web
-  namespace: management
-spec:
-  ports:
-  - name: 6363-80
-    port: 6363
-    protocol: TCP
-    targetPort: 80
-  selector:
-    id: m-3cc-web
-  type: ClusterIP
+  name: high-priority-important
+preemptionPolicy: Never
+value: 9999999
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -138,6 +130,31 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
+  labels:
+    run: what-a-deployment
+  name: what-a-deployment
+  namespace: development
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: what-a-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: what-a-deployment
+    spec:
+      containers:
+      - image: nginx:1.17.6-alpine
+        name: what-a-deployment
+        resources: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   labels:
     id: m-2x3-api
   name: m-2x3-api
@@ -184,7 +201,7 @@ metadata:
   name: m-3cc-runner
   namespace: management
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       id: m-3cc-runner
@@ -228,28 +245,37 @@ spec:
         image: python:3.7.4-alpine3.9
         name: python
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: m-3cc-web
+  creationTimestamp: null
+  labels:
+    run: important-pod
+  name: important-pod
   namespace: management
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      id: m-3cc-web
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        id: m-3cc-web
-    spec:
-      containers:
-      - image: nginx:1.16-alpine
-        name: nginx
-        readinessProbe:
-          initialDelaySeconds: 10
-          periodSeconds: 20
-          tcpSocket:
-            port: 80
+  containers:
+  - image: nginx:1.16.1-alpine
+    name: important
+  dnsPolicy: ClusterFirst
+  priorityClassName: high-priority-important
+  restartPolicy: Never
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: web-server
+  name: web-server
+  namespace: management
+spec:
+  containers:
+  - image: nginx:1.16.1-alpine
+    name: nginx
+  - image: httpd:2.4.41-alpine
+    name: httpd
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
