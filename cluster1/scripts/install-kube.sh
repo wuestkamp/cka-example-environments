@@ -10,9 +10,7 @@ cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y docker.io kubelet=1.18.2-00 kubeadm=1.18.2-00 kubectl=1.18.2-00 kubernetes-cni
-systemctl enable kubelet && systemctl start kubelet
-
+apt-get install -y docker.io=18.09.7-0ubuntu1~18.04.4 kubelet=1.18.2-00 kubeadm=1.18.2-00 kubectl=1.18.2-00 kubernetes-cni
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -20,14 +18,18 @@ cat > /etc/docker/daemon.json <<EOF
   "storage-driver": "overlay2"
 }
 EOF
-
 mkdir -p /etc/systemd/system/docker.service.d
 
 # Restart docker.
 systemctl daemon-reload
-systemctl enable docker && systemctl start docker
+systemctl restart docker
 
-docker info | grep overlay
-docker info | grep systemd
+# start docker on reboot
+systemctl enable docker
+
+docker info | grep -i "storage"
+docker info | grep -i "cgroup"
+
+systemctl enable kubelet && systemctl start kubelet
 
 exit 0
