@@ -10,7 +10,7 @@ cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y docker.io=18.09.7-0ubuntu1~18.04.4 kubelet=1.18.2-00 kubeadm=1.18.2-00 kubectl=1.18.2-00 kubernetes-cni
+apt-get install -y docker.io=19.03.6-0ubuntu1~18.04.2 kubelet=1.18.2-00 kubeadm=1.18.2-00 kubectl=1.18.2-00 kubernetes-cni
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
