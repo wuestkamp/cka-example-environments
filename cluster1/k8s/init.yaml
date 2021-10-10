@@ -274,8 +274,47 @@ spec:
   containers:
   - image: nginx:1.16.1-alpine
     name: nginx
+    volumeMounts:
+    - name: configmap-nginx-conf
+      mountPath: /etc/nginx/
   - image: httpd:2.4.41-alpine
     name: httpd
   dnsPolicy: ClusterFirst
   restartPolicy: Never
+  volumes:
+  - name: configmap-nginx-conf
+    configMap:
+      name: nginx-conf
 status: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: management
+data:
+  nginx.conf: |
+    user                            root;
+    worker_processes                auto;
+
+    error_log                       /var/log/nginx/error.log warn;
+
+    events {
+        worker_connections          1024;
+    }
+
+    http {
+        default_type                application/octet-stream;
+        sendfile                    off;
+        access_log                  off;
+        keepalive_timeout           3000;
+        server {
+            listen                  80;
+            root                    /usr/share/nginx/html;
+            index                   index.html;
+            server_name             localhost;
+            client_max_body_size    16m;
+        }
+    }
+
+
