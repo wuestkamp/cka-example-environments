@@ -1,11 +1,21 @@
 # Kubernetes CKA Example Environments
 
-## challenges:
+
+## ! WE MOVED !
+
+**THIS CHALLENGE SERIES WON’T BE UPDATED AND MOVED TO:**
+
+https://killercoda.com/killer-shell-cka
+
+
+## LEGACY
+
+### challenges:
 
 https://levelup.gitconnected.com/kubernetes-cka-example-questions-practical-challenge-86318d85b4d?source=friends_link&sk=cb63eb0edd1210851f01df24b2142db2
 
 
-## setup and run
+### setup and run
 You will start a two node cluster on your machine, one master and one worker. For this you need to install VirtualBox and vagrant, then:
 
 
