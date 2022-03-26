@@ -148,7 +148,7 @@ spec:
         run: what-a-deployment
     spec:
       containers:
-      - image: nginx:1.17.6-alpine
+      - image: nginx:1.21-alpine
         name: what-a-deployment
         resources: {}
 ---
@@ -255,7 +255,7 @@ metadata:
   namespace: management
 spec:
   containers:
-  - image: nginx:1.16.1-alpine
+  - image: nginx:1.21-alpine
     name: important
   dnsPolicy: ClusterFirst
   priorityClassName: high-priority-important
@@ -272,7 +272,7 @@ metadata:
   namespace: management
 spec:
   containers:
-  - image: nginx:1.16.1-alpine
+  - image: nginx:1.21-alpine
     name: nginx
     volumeMounts:
     - name: configmap-nginx-conf

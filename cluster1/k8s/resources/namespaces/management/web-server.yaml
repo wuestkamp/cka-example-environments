@@ -8,7 +8,7 @@ metadata:
   namespace: management
 spec:
   containers:
-  - image: nginx:1.16.1-alpine
+  - image: nginx:1.21.6-alpine
     name: nginx
     volumeMounts:
     - name: configmap-nginx-conf
